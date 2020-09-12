@@ -1,0 +1,1 @@
+CREATE DATABASE ec_cube;

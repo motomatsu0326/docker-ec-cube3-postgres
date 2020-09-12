@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  db:
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD/docker/postgres/data:/var/lib/postgresql/data:delegated
+      - $PWD/docker/postgres/sql:/docker-entrhypoint-initdb.d:delegated
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ec_cube
+      - TZ=Asia/Tokyo
+    ports:
+      - 5432:5432
+  web:
+    build:
+      context: ./docker/php-apache
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD/ec-cube3:/var/www/html:delegated
+    ports:
+      - 8888:80
+    depends_on:
+      - db
+  adminer:
+    image: adminer:4.7-standalone
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DESIGN: ng9
+    ports:
+      - "8889:8080"
+    depends_on:
+      - db

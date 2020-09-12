@@ -1,0 +1,12 @@
+docker/postgres/data/*
+!docker/postgres/data/.gitkeep
+
+ec-cube3/app/log/*
+!ec-cube3/app/log/.gitkeep
+
+ec-cube3/app/cache/*
+!ec-cube3/app/cache/.gitkeep
+
+vendor/
+
+.DS_Store

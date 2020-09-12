@@ -21,7 +21,7 @@ $ docker-compose up -d
 
 ②Webサーバーのコンテナーに接続
 ```
-$ docker exec -it docker-ec-cube-3-postgres_web_1 sh
+$ docker exec -it docker-ec-cube3-postgres_web_1 sh
 ```
 
 ③コンテナー内で依存ライブラリをインストール

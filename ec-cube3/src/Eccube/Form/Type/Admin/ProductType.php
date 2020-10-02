@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,10 +28,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Eccube\Application;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -159,37 +155,6 @@ class ProductType extends AbstractType
                 'allow_delete' => true,
             ))
         ;
-
-        $that = $this;
-        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($that) {
-            /** @var FormInterface $form */
-            $form = $event->getForm();
-            $saveImgDir = $that->app['config']['image_save_realdir'];
-            $tempImgDir = $that->app['config']['image_temp_realdir'];
-            $that->validateFilePath($form->get('delete_images'), array($saveImgDir, $tempImgDir));
-            $that->validateFilePath($form->get('add_images'), array($tempImgDir));
-        });
-    }
-
-    /**
-     * 指定された複数ディレクトリのうち、いずれかのディレクトリ以下にファイルが存在するかを確認。
-     *
-     * @param $form FormInterface
-     * @param $dirs array
-     */
-    private function validateFilePath($form, $dirs)
-    {
-        foreach ($form->getData() as $fileName) {
-            $fileInDir = array_filter($dirs, function ($dir) use ($fileName) {
-                $filePath = realpath($dir.'/'.$fileName);
-                $topDirPath = realpath($dir);
-                return strpos($filePath, $topDirPath) === 0 && $filePath !== $topDirPath;
-            });
-            if (!$fileInDir) {
-                $formRoot = $form->getRoot();
-                $formRoot['product_image']->addError(new FormError('画像のパスが不正です。'));
-            }
-        }
     }
 
     /**

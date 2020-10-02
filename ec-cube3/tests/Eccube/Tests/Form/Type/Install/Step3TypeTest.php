@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -271,13 +271,5 @@ class Step3TypeTest extends AbstractTypeTestCase
 
         $this->form->submit($this->formData);
         $this->assertTrue($this->form->isValid());
-    }
-
-    public function testInValid_AdminDir()
-    {
-        $this->formData['admin_dir'] = 'admin';
-
-        $this->form->submit($this->formData);
-        $this->assertFalse($this->form->isValid());
     }
 }

@@ -1,9 +1,9 @@
 {#
 This file is part of EC-CUBE
 
-Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
 
-http://www.ec-cube.co.jp/
+http://www.lockon.co.jp/
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -44,14 +44,7 @@ $(function(){
 {% endblock javascript %}
 
 {% block main %}
-    {% if is_danger_admin_url %}
-        <div class="row">
-            <div class="alert alert-warning alert-dismissable alert-section">
-                <button type="button" class="close" data-dismiss="alert"><span class="alert-close" aria-hidden="true">×</span></button>
-                <svg class="cb cb-info-circle"> <use xlink:href="#cb-info-circle"></use></svg> 管理画面URLは、セキュリティのため推測されにくいものを設定してください。「<a href="{{ url('admin_setting_system_security') }}">セキュリティ管理</a>」から設定できます。
-            </div>
-        </div>
-    {% endif %}
+
         <div class="row">
             <div class="col-md-6">
                 <form id="order-state" name="form1" action="{{ url('admin_order') }}" method="post">

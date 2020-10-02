@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,12 +77,6 @@ class AdminController extends AbstractController
                 $message = $app->trans('admin.install.warning', array('installphpPath' => 'install.php'));
                 $app->addWarning($message, 'admin');
             }
-        }
-
-        $is_danger_admin_url = false;
-        // 管理画面URLのチェック
-        if (isset($app['config']['admin_route']) && $app['config']['admin_route'] == 'admin') {
-            $is_danger_admin_url = true;
         }
 
         // 受注マスター検索用フォーム
@@ -194,7 +188,6 @@ class AdminController extends AbstractController
             'salesYesterday' => $salesYesterday,
             'countNonStockProducts' => $countNonStockProducts,
             'countCustomers' => $countCustomers,
-            'is_danger_admin_url' => $is_danger_admin_url,
         ));
     }
 

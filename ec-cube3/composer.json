@@ -4,8 +4,8 @@
     "type": "project",
     "homepage": "http://www.ec-cube.net/",
     "license": [
-       "GPL-2.0-only",
-       "proprietary"
+       "GPL-2.0",
+       "Commercial"
     ],
     "support": {
         "issues": "https://github.com/EC-CUBE/ec-cube/issues"

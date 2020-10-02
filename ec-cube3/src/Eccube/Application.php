@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -236,32 +236,11 @@ class Application extends ApplicationTrait
 
     public function initSession()
     {
-        $root_urlpath = $this['config']['root_urlpath'] ?: '/';
-        $ua = array_key_exists('HTTP_USER_AGENT', $_SERVER) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        $targetUaPatterns = array(
-            '/^.*iPhone; CPU iPhone OS 1[0-2].*$/',
-            '/^.*iPad; CPU OS 1[0-2].*$/',
-            '/^.*iPod touch; CPU iPhone OS 1[0-2].*$/',
-            '/^.*Macintosh; Intel Mac OS X.*Version\/1[0-2].*Safari.*$/',
-        );
-        $isUnsupported = array_filter($targetUaPatterns, function ($pattern) use ($ua) {
-            return preg_match($pattern, $ua);
-        });
-        if ($this['config']['force_ssl'] == \Eccube\Common\Constant::ENABLED && !$isUnsupported) {
-            if (PHP_VERSION_ID >= 70300) {
-                ini_set('session.cookie_path', $root_urlpath);
-                ini_set('session.cookie_samesite', 'none');
-            } else {
-                ini_set('session.cookie_path', $root_urlpath.'; SameSite=none');
-            }
-        } else {
-            ini_set('session.cookie_path', $root_urlpath);
-        }
-
         $this->register(new \Silex\Provider\SessionServiceProvider(), array(
             'session.storage.save_path' => $this['config']['root_dir'].'/app/cache/eccube/session',
             'session.storage.options' => array(
                 'name' => $this['config']['cookie_name'],
+                'cookie_path' => $this['config']['root_urlpath'] ?: '/',
                 'cookie_secure' => $this['config']['force_ssl'],
                 'cookie_lifetime' => $this['config']['cookie_lifetime'],
                 'cookie_httponly' => true,
@@ -340,7 +319,7 @@ class Application extends ApplicationTrait
             if ($app->isAdminRequest()) {
                 // IP制限チェック
                 $allowHost = $app['config']['admin_allow_host'];
-                if (is_array($allowHost) && count($allowHost) > 0) {
+                if (count($allowHost) > 0) {
                     if (array_search($app['request']->getClientIp(), $allowHost) === false) {
                         throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
                     }
@@ -634,46 +613,6 @@ class Application extends ApplicationTrait
             return new \Symfony\Component\Security\Core\Authorization\AccessDecisionManager($app['security.voters'], 'unanimous');
         });
 
-        $app = $this;
-        $app['security.authentication.success_handler.admin'] = $app->share(function ($app) {
-            $handler = new \Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler(
-                $app['security.http_utils'],
-                $app['security.firewalls']['admin']['form']
-            );
-
-            $handler->setProviderKey('admin');
-
-            return $handler;
-        });
-
-        $app['security.authentication.failure_handler.admin'] = $app->share(function ($app) {
-            return new \Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler(
-                $app,
-                $app['security.http_utils'],
-                $app['security.firewalls']['admin']['form'],
-                $app['logger']
-            );
-        });
-
-        $app['security.authentication.success_handler.customer'] = $app->share(function ($app) {
-            $handler = new \Eccube\Security\Http\Authentication\EccubeAuthenticationSuccessHandler(
-                $app['security.http_utils'],
-                $app['security.firewalls']['customer']['form']
-            );
-
-            $handler->setProviderKey('customer');
-
-            return $handler;
-        });
-
-        $app['security.authentication.failure_handler.customer'] = $app->share(function ($app) {
-            return new \Eccube\Security\Http\Authentication\EccubeAuthenticationFailureHandler(
-                $app,
-                $app['security.http_utils'],
-                $app['security.firewalls']['customer']['form'],
-                $app['logger']
-            );
-        });
     }
 
     /**

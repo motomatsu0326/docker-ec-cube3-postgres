@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1046,16 +1046,14 @@ class ShoppingController extends AbstractController
             }
 
             // 非会員用セッションを作成
-            $app['eccube.service.shopping']->setNonMember($this->sessionKey, $Customer);
+            $nonMember = array();
+            $nonMember['customer'] = $Customer;
+            $nonMember['pref'] = $Customer->getPref()->getId();
+            $app['session']->set($this->sessionKey, $nonMember);
 
-            $CustomerAddressArray = $CustomerAddress->toArray();
-            $CustomerAddressArray['Customer'] = $CustomerAddress->getCustomer()->toArray();
-            $CustomerAddressArray['Pref'] = $CustomerAddress->getPref()->toArray();
-
-            $CustomerAddressesArray = array();
-            $CustomerAddressesArray[] = $CustomerAddressArray;
-
-            $app['session']->set($this->sessionCustomerAddressKey, json_encode($CustomerAddressesArray));
+            $customerAddresses = array();
+            $customerAddresses[] = $CustomerAddress;
+            $app['session']->set($this->sessionCustomerAddressKey, serialize($customerAddresses));
 
             $event = new EventArgs(
                 array(
@@ -1424,15 +1422,12 @@ class ShoppingController extends AbstractController
             return $CustomerAddressData;
         } else {
             $cusAddId = $CustomerAddressData;
-
             $customerAddresses = $app['session']->get($this->sessionCustomerAddressKey);
-            $customerAddresses = json_decode($customerAddresses, true);
+            $customerAddresses = unserialize($customerAddresses);
 
-            $customerAddressArray = $customerAddresses[$cusAddId];
-
-            $CustomerAddress = new CustomerAddress();
-            $CustomerAddress->setPropertiesFromArray($customerAddressArray);
-            $CustomerAddress->setPref($app['eccube.repository.master.pref']->find($customerAddressArray['Pref']['id']));
+            $CustomerAddress = $customerAddresses[$cusAddId];
+            $pref = $app['eccube.repository.master.pref']->find($CustomerAddress->getPref()->getId());
+            $CustomerAddress->setPref($pref);
 
             return $CustomerAddress;
         }
@@ -1475,15 +1470,11 @@ class ShoppingController extends AbstractController
 
             log_info('非会員お届け先追加処理開始');
 
-            $customerAddressArray = $CustomerAddress->toArray();
-            $customerAddressArray['Customer'] = $CustomerAddress->getCustomer()->toArray();
-            $customerAddressArray['Pref'] = $CustomerAddress->getPref()->toArray();
-
             // 非会員用のセッションに追加
-            $customerAddresses = json_decode($app['session']->get($this->sessionCustomerAddressKey), true);
-            $customerAddresses[] = $customerAddressArray;
-
-            $app['session']->set($this->sessionCustomerAddressKey, json_encode($customerAddresses));
+            $customerAddresses = $app['session']->get($this->sessionCustomerAddressKey);
+            $customerAddresses = unserialize($customerAddresses);
+            $customerAddresses[] = $CustomerAddress;
+            $app['session']->set($this->sessionCustomerAddressKey, serialize($customerAddresses));
 
             $event = new EventArgs(
                 array(

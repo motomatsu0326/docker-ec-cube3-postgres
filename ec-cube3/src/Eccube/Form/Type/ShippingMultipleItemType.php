@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,6 @@
 
 namespace Eccube\Form\Type;
 
-use Eccube\Entity\CustomerAddress;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -87,21 +86,14 @@ class ShippingMultipleItemType extends AbstractType
                     // 非会員の場合、セッションに設定されたCustomerAddressを設定
                     if ($app['session']->has('eccube.front.shopping.nonmember.customeraddress')) {
                         $customerAddresses = $app['session']->get('eccube.front.shopping.nonmember.customeraddress');
-                        $customerAddresses = json_decode($customerAddresses, true);
+                        $customerAddresses = unserialize($customerAddresses);
 
                         $addresses = array();
-                        /** @var \Eccube\Entity\CustomerAddress $value */
-                        foreach ($customerAddresses as $value) {
-
-                            $customerAddressArray = (array) $value;
-                            $customerAddressArray['Pref'] = (array) $customerAddressArray['Pref'];
-
-                            $CustomerAddress = new CustomerAddress();
-                            $CustomerAddress->setPropertiesFromArray($customerAddressArray);
-                            $CustomerAddress->setCustomer($app['eccube.service.shopping']->getNonMember('eccube.front.shopping.nonmember'));
-                            $CustomerAddress->setPref($app['eccube.repository.master.pref']->find($customerAddressArray['Pref']['id']));
-
-                            $addresses[] = $CustomerAddress->getShippingMultipleDefaultName();
+                        $i = 0;
+                        /** @var \Eccube\Entity\CustomerAddress $CustomerAddress */
+                        foreach ($customerAddresses as $CustomerAddress) {
+                            $addresses[$i] = $CustomerAddress->getShippingMultipleDefaultName();
+                            $i++;
                         }
                         $form->add('customer_address', 'choice', array(
                             'choices' => $addresses,

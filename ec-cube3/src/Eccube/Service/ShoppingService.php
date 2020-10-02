@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -118,26 +118,10 @@ class ShoppingService
         }
 
         $Customer = $nonMember['customer'];
-        $Customer->setPropertiesFromArray($nonMember, array('customer', 'id', 'pref', 'email', 'password', 'salt'));
         $Customer->setPref($this->app['eccube.repository.master.pref']->find($nonMember['pref']));
+
         return $Customer;
-    }
 
-    /**
-     * 非会員情報をセッションに設定する
-     *
-     * @param $sesisonKey
-     * @param Customer $Customer
-     * @return ShoppingService
-     */
-    public function setNonMember($sessionKey, Customer $Customer)
-    {
-        $nonMember = $Customer->toArray(array('id', 'email', 'password', 'salt'));
-        $nonMember['pref'] = $Customer->getPref()->getId();
-        $nonMember['customer'] = $Customer; // Customer::serialize() で対象となっているプロパティのみ保存される
-        $this->app['session']->set($sessionKey, $nonMember);
-
-        return $this;
     }
 
     /**

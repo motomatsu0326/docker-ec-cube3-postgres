@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,7 +100,6 @@ class Step3Type extends AbstractType
                         'max' => $this->app['config']['id_max_len'],
                     )),
                     new Assert\Regex(array('pattern' => '/\A\w+\z/')),
-                    new Assert\NotEqualTo(array('value' => 'admin', 'message' => 'ディレクトリ名に「admin」を使用することはできません。')),
                 ),
             ))
             ->add('admin_force_ssl', 'checkbox', array(

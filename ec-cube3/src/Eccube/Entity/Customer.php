@@ -2,9 +2,9 @@
 /*
  * This file is part of EC-CUBE
  *
- * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ * Copyright(c) 2000-2015 LOCKON CO.,LTD. All Rights Reserved.
  *
- * http://www.ec-cube.co.jp/
+ * http://www.lockon.co.jp/
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 /**
  * Customer
  */
-class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface, \Serializable
+class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface
 {
     /**
      * @var integer
@@ -1238,42 +1238,5 @@ class Customer extends \Eccube\Entity\AbstractEntity implements UserInterface, \
         $this->CustomerAddresses[] = $customerAddresses;
 
         return $this;
-    }
-
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     * @since 5.1.0
-     */
-    public function serialize()
-    {
-        // see https://symfony.com/doc/2.7/security/entity_provider.html#create-your-user-entity
-        // CustomerRepository::loadUserByUsername() で Status をチェックしているため、ここでは不要
-        return serialize(array(
-            $this->id,
-            $this->email,
-            $this->password,
-            $this->salt,
-        ));
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
-     * @since 5.1.0
-     */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->email,
-            $this->password,
-            $this->salt,
-            ) = unserialize($serialized);
     }
 }

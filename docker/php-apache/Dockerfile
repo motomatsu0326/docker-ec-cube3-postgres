@@ -4,7 +4,7 @@ ENV DEBCONF_NOWARNINGS yes
 
 RUN set -ex apk --no-cache add postgresql-dev libpq-dev
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev libpq-dev git \
+    && apt-get install -y zlib1g-dev libpq-dev git zip unzip \
     && docker-php-ext-install pdo_mysql pdo_pgsql mysqli \
     && a2enmod rewrite
 

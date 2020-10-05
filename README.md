@@ -46,5 +46,5 @@ http://localhost:8888/html
 
 ④ 下記URLにアクセスしてadminer（db管理ツール）に接続確認
 ```
-http://localhost:8089
+http://localhost:8889
 ```

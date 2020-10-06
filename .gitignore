@@ -10,3 +10,5 @@ ec-cube3/app/cache/*
 vendor/
 
 .DS_Store
+
+.idea

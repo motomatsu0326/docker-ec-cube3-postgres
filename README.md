@@ -36,6 +36,7 @@ http://localhost:8888/html
 ```
 
 ※データベースの設定は下記の通り
+
 | 設定項目 | 設定値 |
 | :---: | :---: |
 | データベースのホスト名 | db |
@@ -48,3 +49,22 @@ http://localhost:8888/html
 ```
 http://localhost:8889
 ```
+⑤　ec-cube3/app/config/mail.ymlを編集し、メールサーバーの設定をする。
+
+- [mailcatcher](https://qiita.com/nanasess/items/8194ae76c1b94c9a7bb9)
+を使用する場合  
+mail.ymlを以下の内容で書き換え、`http://localhost:1080` から送信メールを確認する。
+```
+mail:
+    transport: smtp
+    host: mailcatcher
+    port: '1025'
+    username: ''
+    password: ''
+    encryption: null
+    auth_mode: null
+    charset_iso_2022_jp: false
+```
+
+
+

@@ -33,3 +33,8 @@ services:
       - "8889:8080"
     depends_on:
       - db
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
